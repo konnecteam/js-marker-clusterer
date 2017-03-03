@@ -26,5 +26,12 @@
   "bugs": {
     "url": "https://github.com/googlemaps/js-marker-clusterer/issues"
   },
-  "homepage": "https://github.com/googlemaps/js-marker-clusterer#readme"
+  "homepage": "https://github.com/googlemaps/js-marker-clusterer#readme",
+  "devDependencies": {
+    "typescript": "^2.2.1",
+    "typings": "^2.1.0",
+    "@types/google-maps": "^3.2.0"
+  },
+  "dependencies": {
+  }
 }
