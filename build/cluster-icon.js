@@ -16,9 +16,8 @@
  * @ignore
  */
 "use strict";
-class ClusterIcon extends google.maps.OverlayView {
+class ClusterIcon {
     constructor(cluster, styles, opt_padding) {
-        super();
         this.styles_ = null;
         this.padding_ = 0;
         this.cluster_ = null;
@@ -37,6 +36,7 @@ class ClusterIcon extends google.maps.OverlayView {
         this.anchor_ = null;
         this.textSize_ = null;
         this.backgroundPosition_ = null;
+        cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
         this.styles_ = styles;
         this.padding_ = opt_padding || 0;
         this.cluster_ = cluster;

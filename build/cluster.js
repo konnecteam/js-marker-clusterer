@@ -85,7 +85,7 @@ class Cluster {
         if (len >= this.minClusterSize_) {
             marker.setMap(null);
         }
-        this.updateIcon();
+        // this.updateIcon(); //GG -> fait plus tard
         return true;
     }
     ;

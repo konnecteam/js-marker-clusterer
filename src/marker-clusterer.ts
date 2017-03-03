@@ -35,7 +35,27 @@ import { Cluster } from './cluster';
  */
 
 
-/**
+export class MarkerClusterer {
+
+  map_ = null;
+  markers_: Array<google.maps.Marker> = [];
+  clusters_: Array<Cluster> = [];
+  sizes = [];
+  styles_ = [];
+  ready_: boolean = false;
+  gridSize_: number = 60;
+  minClusterSize_ = 0;
+  maxZoom_: number = 0;
+  imagePath_: string = "";
+  imageExtension_: string = "";
+  MARKER_CLUSTER_IMAGE_PATH_: string = '../images/m';
+  MARKER_CLUSTER_IMAGE_EXTENSION_: string = "png";
+  zoomOnClick_: boolean = true;
+  averageCenter_: boolean = false;
+  prevZoom_: number = 0;
+
+
+  /**
  * A Marker Clusterer that clusters markers.
  *
  * @param {google.maps.Map} map The Google map to attach to.
@@ -64,27 +84,8 @@ import { Cluster } from './cluster';
  * @constructor
  * @extends google.maps.OverlayView
  */
-export class MarkerClusterer extends google.maps.OverlayView {
-
-  map_ = null;
-  markers_: Array<google.maps.Marker> = [];
-  clusters_: Array<Cluster> = [];
-  sizes = [];
-  styles_ = [];
-  ready_: boolean = false;
-  gridSize_: number = 60;
-  minClusterSize_ = 0;
-  maxZoom_: number = 0;
-  imagePath_: string = "";
-  imageExtension_: string = "";
-  MARKER_CLUSTER_IMAGE_PATH_: string = '../images/m';
-  MARKER_CLUSTER_IMAGE_EXTENSION_: string = "png";
-  zoomOnClick_: boolean = true;
-  averageCenter_: boolean = false;
-  prevZoom_: number = 0;
-
   constructor(map, opt_markers, opt_options) {
-    super();
+    this.extend(MarkerClusterer, google.maps.OverlayView);
 
     this.map_ = map;
     this.sizes = [53, 56, 66, 78, 90];
@@ -109,7 +110,8 @@ export class MarkerClusterer extends google.maps.OverlayView {
     this.prevZoom_ = this.map_.getZoom();
 
     // Add the map event listeners
-    google.maps.event.addListener(this.map_, 'zoom_changed', () => {
+    //@Changed ggrimbert -> on n'utilise pas les listeners, c'est le composant qui va appeler le constructeur, qui va refresh
+    /*google.maps.event.addListener(this.map_, 'zoom_changed', () => {
       var zoom = this.map_.getZoom();
 
       if (this.prevZoom_ != zoom) {
@@ -120,12 +122,21 @@ export class MarkerClusterer extends google.maps.OverlayView {
 
     google.maps.event.addListener(this.map_, 'idle', () => {
       this.redraw();
-    });
+    });*/
 
     // Finally, add the markers
     if (opt_markers && opt_markers.length) {
       this.addMarkers(opt_markers, false);
     }
+  }
+
+  extend(obj1, obj2) {
+  return (function(object) {
+    for (var property in object.prototype) {
+      this.prototype[property] = object.prototype[property];
+    }
+    return this;
+  }).apply(obj1, [obj2]);
   }
 
   /**
@@ -249,7 +260,7 @@ export class MarkerClusterer extends google.maps.OverlayView {
     var count = markers.length;
     var dv = count;
     while (dv !== 0) {
-      dv = dv / 10;
+      dv = Math.trunc(dv / 10);
       index++;
     }
 
@@ -302,10 +313,9 @@ export class MarkerClusterer extends google.maps.OverlayView {
     if (marker['draggable']) {
       // If the marker is draggable add a listener so we update the clusters on
       // the drag end.
-      var that = this;
-      google.maps.event.addListener(marker, 'dragend', function () {
+      google.maps.event.addListener(marker, 'dragend', () => {
         marker.isAdded = false;
-        that.repaint();
+        this.repaint();
       });
     }
     this.markers_.push(marker);
@@ -464,7 +474,7 @@ export class MarkerClusterer extends google.maps.OverlayView {
    * @return {google.maps.LatLngBounds} The extended bounds.
    */
   getExtendedBounds(bounds) {
-    var projection = this.getProjection();
+    var projection = (this as any).getProjection();
 
     // Turn the bounds into latlng.
     var tr = new google.maps.LatLng(bounds.getNorthEast().lat(),
@@ -628,6 +638,10 @@ export class MarkerClusterer extends google.maps.OverlayView {
       if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
         this.addToClosestCluster_(marker);
       }
+    }
+
+    for (let i = 0; i < this.clusters_.length; i++) {
+      this.clusters_[i].updateIcon();
     }
   };
 }

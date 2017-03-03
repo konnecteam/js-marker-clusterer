@@ -32,38 +32,37 @@ const cluster_1 = require("./cluster");
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * A Marker Clusterer that clusters markers.
- *
- * @param {google.maps.Map} map The Google map to attach to.
- * @param {Array.<google.maps.Marker>=} opt_markers Optional markers to add to
- *   the cluster.
- * @param {Object=} opt_options support the following options:
- *     'gridSize': (number) The grid size of a cluster in pixels.
- *     'maxZoom': (number) The maximum zoom level that a marker can be part of a
- *                cluster.
- *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
- *                    cluster is to zoom into it.
- *     'averageCenter': (boolean) Whether the center of each cluster should be
- *                      the average of all markers in the cluster.
- *     'minimumClusterSize': (number) The minimum number of markers to be in a
- *                           cluster before the markers are hidden and a count
- *                           is shown.
- *     'styles': (object) An object that has style properties:
- *       'url': (string) The image url.
- *       'height': (number) The image height.
- *       'width': (number) The image width.
- *       'anchor': (Array) The anchor position of the label text.
- *       'textColor': (string) The text color.
- *       'textSize': (number) The text size.
- *       'backgroundPosition': (string) The position of the backgound x, y.
- *       'iconAnchor': (Array) The anchor position of the icon x, y.
- * @constructor
- * @extends google.maps.OverlayView
- */
-class MarkerClusterer extends google.maps.OverlayView {
+class MarkerClusterer {
+    /**
+   * A Marker Clusterer that clusters markers.
+   *
+   * @param {google.maps.Map} map The Google map to attach to.
+   * @param {Array.<google.maps.Marker>=} opt_markers Optional markers to add to
+   *   the cluster.
+   * @param {Object=} opt_options support the following options:
+   *     'gridSize': (number) The grid size of a cluster in pixels.
+   *     'maxZoom': (number) The maximum zoom level that a marker can be part of a
+   *                cluster.
+   *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
+   *                    cluster is to zoom into it.
+   *     'averageCenter': (boolean) Whether the center of each cluster should be
+   *                      the average of all markers in the cluster.
+   *     'minimumClusterSize': (number) The minimum number of markers to be in a
+   *                           cluster before the markers are hidden and a count
+   *                           is shown.
+   *     'styles': (object) An object that has style properties:
+   *       'url': (string) The image url.
+   *       'height': (number) The image height.
+   *       'width': (number) The image width.
+   *       'anchor': (Array) The anchor position of the label text.
+   *       'textColor': (string) The text color.
+   *       'textSize': (number) The text size.
+   *       'backgroundPosition': (string) The position of the backgound x, y.
+   *       'iconAnchor': (Array) The anchor position of the icon x, y.
+   * @constructor
+   * @extends google.maps.OverlayView
+   */
     constructor(map, opt_markers, opt_options) {
-        super();
         this.map_ = null;
         this.markers_ = [];
         this.clusters_ = [];
@@ -80,6 +79,7 @@ class MarkerClusterer extends google.maps.OverlayView {
         this.zoomOnClick_ = true;
         this.averageCenter_ = false;
         this.prevZoom_ = 0;
+        this.extend(MarkerClusterer, google.maps.OverlayView);
         this.map_ = map;
         this.sizes = [53, 56, 66, 78, 90];
         let options = opt_options || {};
@@ -99,20 +99,31 @@ class MarkerClusterer extends google.maps.OverlayView {
         this.setMap(map);
         this.prevZoom_ = this.map_.getZoom();
         // Add the map event listeners
-        google.maps.event.addListener(this.map_, 'zoom_changed', () => {
-            var zoom = this.map_.getZoom();
-            if (this.prevZoom_ != zoom) {
-                this.prevZoom_ = zoom;
-                this.resetViewport();
-            }
+        //@Changed ggrimbert -> on n'utilise pas les listeners, c'est le composant qui va appeler le constructeur, qui va refresh
+        /*google.maps.event.addListener(this.map_, 'zoom_changed', () => {
+          var zoom = this.map_.getZoom();
+    
+          if (this.prevZoom_ != zoom) {
+            this.prevZoom_ = zoom;
+            this.resetViewport();
+          }
         });
+    
         google.maps.event.addListener(this.map_, 'idle', () => {
-            this.redraw();
-        });
+          this.redraw();
+        });*/
         // Finally, add the markers
         if (opt_markers && opt_markers.length) {
             this.addMarkers(opt_markers, false);
         }
+    }
+    extend(obj1, obj2) {
+        return (function (object) {
+            for (var property in object.prototype) {
+                this.prototype[property] = object.prototype[property];
+            }
+            return this;
+        }).apply(obj1, [obj2]);
     }
     /**
      * Implementaion of the interface method.
@@ -233,7 +244,7 @@ class MarkerClusterer extends google.maps.OverlayView {
         var count = markers.length;
         var dv = count;
         while (dv !== 0) {
-            dv = dv / 10;
+            dv = Math.trunc(dv / 10);
             index++;
         }
         index = Math.min(index, numStyles);
@@ -285,10 +296,9 @@ class MarkerClusterer extends google.maps.OverlayView {
         if (marker['draggable']) {
             // If the marker is draggable add a listener so we update the clusters on
             // the drag end.
-            var that = this;
-            google.maps.event.addListener(marker, 'dragend', function () {
+            google.maps.event.addListener(marker, 'dragend', () => {
                 marker.isAdded = false;
-                that.repaint();
+                this.repaint();
             });
         }
         this.markers_.push(marker);
@@ -592,6 +602,9 @@ class MarkerClusterer extends google.maps.OverlayView {
             if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
                 this.addToClosestCluster_(marker);
             }
+        }
+        for (let i = 0; i < this.clusters_.length; i++) {
+            this.clusters_[i].updateIcon();
         }
     }
     ;

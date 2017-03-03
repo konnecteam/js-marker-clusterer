@@ -1,4 +1,3 @@
-/// <reference types="googlemaps" />
 /**
  * A cluster icon
  *
@@ -16,7 +15,7 @@
  * @extends google.maps.OverlayView
  * @ignore
  */
-export declare class ClusterIcon extends google.maps.OverlayView {
+export declare class ClusterIcon {
     styles_: any;
     padding_: number;
     cluster_: any;
@@ -52,7 +51,7 @@ export declare class ClusterIcon extends google.maps.OverlayView {
      * @return {google.maps.Point} The position in pixels.
      * @private
      */
-    getPosFromLatLng_(latlng: any): google.maps.Point;
+    getPosFromLatLng_(latlng: any): any;
     /**
      * Draw the icon.
      * @ignore

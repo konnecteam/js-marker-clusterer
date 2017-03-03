@@ -16,7 +16,7 @@
  * @ignore
  */
 
-export class ClusterIcon extends google.maps.OverlayView {
+export class ClusterIcon {
 
     styles_ = null;
     padding_ = 0;
@@ -38,7 +38,7 @@ export class ClusterIcon extends google.maps.OverlayView {
     backgroundPosition_ = null;
 
     constructor(cluster, styles, opt_padding) {
-        super();
+        cluster.getMarkerClusterer().extend(ClusterIcon, google.maps.OverlayView);
         this.styles_ = styles;
         this.padding_ = opt_padding || 0;
         this.cluster_ = cluster;
@@ -48,7 +48,7 @@ export class ClusterIcon extends google.maps.OverlayView {
         this.sums_ = null;
         this.visible_ = false;
 
-        this.setMap(this.map_);
+        (this as any).setMap(this.map_);
     }
 
     /**
@@ -79,7 +79,7 @@ export class ClusterIcon extends google.maps.OverlayView {
             this.div_.innerHTML = this.sums_.text;
         }
 
-        var panes = this.getPanes();
+        var panes = (this as any).getPanes();
         panes.overlayMouseTarget.appendChild(this.div_);
 
         var that = this;
@@ -105,7 +105,7 @@ export class ClusterIcon extends google.maps.OverlayView {
      * @private
      */
     getPosFromLatLng_(latlng) {
-        var pos = this.getProjection().fromLatLngToDivPixel(latlng);
+        var pos = (this as any).getProjection().fromLatLngToDivPixel(latlng);
 
         if (typeof this.iconAnchor_ === 'object' && this.iconAnchor_.length === 2) {
             pos.x -= this.iconAnchor_[0];
@@ -155,7 +155,7 @@ export class ClusterIcon extends google.maps.OverlayView {
      * Remove the icon from the map
      */
     remove() {
-        this.setMap(null);
+        (this as any).setMap(null);
     };
 
     /**

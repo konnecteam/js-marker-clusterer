@@ -92,7 +92,7 @@ export class Cluster {
             marker.setMap(null);
         }
 
-        this.updateIcon();
+        // this.updateIcon(); //GG -> fait plus tard
         return true;
     };
 

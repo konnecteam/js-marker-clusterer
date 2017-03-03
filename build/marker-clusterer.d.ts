@@ -28,36 +28,7 @@ import { Cluster } from './cluster';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * A Marker Clusterer that clusters markers.
- *
- * @param {google.maps.Map} map The Google map to attach to.
- * @param {Array.<google.maps.Marker>=} opt_markers Optional markers to add to
- *   the cluster.
- * @param {Object=} opt_options support the following options:
- *     'gridSize': (number) The grid size of a cluster in pixels.
- *     'maxZoom': (number) The maximum zoom level that a marker can be part of a
- *                cluster.
- *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
- *                    cluster is to zoom into it.
- *     'averageCenter': (boolean) Whether the center of each cluster should be
- *                      the average of all markers in the cluster.
- *     'minimumClusterSize': (number) The minimum number of markers to be in a
- *                           cluster before the markers are hidden and a count
- *                           is shown.
- *     'styles': (object) An object that has style properties:
- *       'url': (string) The image url.
- *       'height': (number) The image height.
- *       'width': (number) The image width.
- *       'anchor': (Array) The anchor position of the label text.
- *       'textColor': (string) The text color.
- *       'textSize': (number) The text size.
- *       'backgroundPosition': (string) The position of the backgound x, y.
- *       'iconAnchor': (Array) The anchor position of the icon x, y.
- * @constructor
- * @extends google.maps.OverlayView
- */
-export declare class MarkerClusterer extends google.maps.OverlayView {
+export declare class MarkerClusterer {
     map_: any;
     markers_: Array<google.maps.Marker>;
     clusters_: Array<Cluster>;
@@ -74,7 +45,37 @@ export declare class MarkerClusterer extends google.maps.OverlayView {
     zoomOnClick_: boolean;
     averageCenter_: boolean;
     prevZoom_: number;
+    /**
+   * A Marker Clusterer that clusters markers.
+   *
+   * @param {google.maps.Map} map The Google map to attach to.
+   * @param {Array.<google.maps.Marker>=} opt_markers Optional markers to add to
+   *   the cluster.
+   * @param {Object=} opt_options support the following options:
+   *     'gridSize': (number) The grid size of a cluster in pixels.
+   *     'maxZoom': (number) The maximum zoom level that a marker can be part of a
+   *                cluster.
+   *     'zoomOnClick': (boolean) Whether the default behaviour of clicking on a
+   *                    cluster is to zoom into it.
+   *     'averageCenter': (boolean) Whether the center of each cluster should be
+   *                      the average of all markers in the cluster.
+   *     'minimumClusterSize': (number) The minimum number of markers to be in a
+   *                           cluster before the markers are hidden and a count
+   *                           is shown.
+   *     'styles': (object) An object that has style properties:
+   *       'url': (string) The image url.
+   *       'height': (number) The image height.
+   *       'width': (number) The image width.
+   *       'anchor': (Array) The anchor position of the label text.
+   *       'textColor': (string) The text color.
+   *       'textSize': (number) The text size.
+   *       'backgroundPosition': (string) The position of the backgound x, y.
+   *       'iconAnchor': (Array) The anchor position of the icon x, y.
+   * @constructor
+   * @extends google.maps.OverlayView
+   */
     constructor(map: any, opt_markers: any, opt_options: any);
+    extend(obj1: any, obj2: any): any;
     /**
      * Implementaion of the interface method.
      * @ignore
