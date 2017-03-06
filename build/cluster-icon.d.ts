@@ -16,24 +16,24 @@
  * @ignore
  */
 export declare class ClusterIcon {
-    styles_: any;
-    padding_: number;
-    cluster_: any;
-    center_: any;
-    map_: any;
-    div_: any;
-    sums_: any;
-    visible_: boolean;
-    text_: string;
-    index_: any;
-    iconAnchor_: any;
-    width_: number;
-    height_: number;
-    url_: string;
-    textColor_: string;
-    anchor_: any;
-    textSize_: any;
-    backgroundPosition_: any;
+    _styles: any;
+    _padding: number;
+    _cluster: any;
+    _center: any;
+    _map: any;
+    _div: any;
+    _sums: any;
+    _visible: boolean;
+    _text: string;
+    _index: any;
+    _iconAnchor: any;
+    _width: number;
+    _height: number;
+    _url: string;
+    _textColor: string;
+    _anchor: any;
+    _textSize: any;
+    _backgroundPosition: any;
     constructor(cluster: any, styles: any, opt_padding: any);
     /**
    * Triggers the clusterclick event and zoom's if the option is set.
@@ -51,7 +51,7 @@ export declare class ClusterIcon {
      * @return {google.maps.Point} The position in pixels.
      * @private
      */
-    getPosFromLatLng_(latlng: any): any;
+    _getPosFromLatLng(latlng: any): any;
     /**
      * Draw the icon.
      * @ignore

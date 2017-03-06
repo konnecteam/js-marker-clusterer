@@ -4,30 +4,30 @@ import { ClusterIcon } from './cluster-icon';
  */
 export class Cluster {
 
-    markerClusterer_ = null;
-    map_ = null;
-    gridSize_ = null;
-    minClusterSize_ = null;
-    averageCenter_ = null;
-    center_ = null;
-    markers_ = [];
-    bounds_ = null;
-    clusterIcon_ = null;
+    _markerClusterer = null;
+    _map = null;
+    _gridSize = null;
+    _minClusterSize = null;
+    _averageCenter = null;
+    _center = null;
+    _markers = [];
+    _bounds = null;
+    _clusterIcon = null;
 
     /**
      *  @param {MarkerClusterer} markerClusterer The markerclusterer that this
      *     cluster is associated with.
      */
     constructor(markerClusterer) {
-        this.markerClusterer_ = markerClusterer;
-        this.map_ = markerClusterer.getMap();
-        this.gridSize_ = markerClusterer.getGridSize();
-        this.minClusterSize_ = markerClusterer.getMinClusterSize();
-        this.averageCenter_ = markerClusterer.isAverageCenter();
-        this.center_ = null;
-        this.markers_ = [];
-        this.bounds_ = null;
-        this.clusterIcon_ = new ClusterIcon(this, markerClusterer.getStyles(), markerClusterer.getGridSize());
+        this._markerClusterer = markerClusterer;
+        this._map = markerClusterer.getMap();
+        this._gridSize = markerClusterer.getGridSize();
+        this._minClusterSize = markerClusterer.getMinClusterSize();
+        this._averageCenter = markerClusterer.isAverageCenter();
+        this._center = null;
+        this._markers = [];
+        this._bounds = null;
+        this._clusterIcon = new ClusterIcon(this, markerClusterer.getStyles(), markerClusterer.getGridSize());
     }
 
 
@@ -37,10 +37,10 @@ export class Cluster {
      * @return {boolean} True if the marker is already added.
      */
     isMarkerAlreadyAdded(marker) {
-        if (this.markers_.indexOf) {
-            return this.markers_.indexOf(marker) != -1;
+        if (this._markers.indexOf) {
+            return this._markers.indexOf(marker) != -1;
         } else {
-            for (var i = 0, m; m = this.markers_[i]; i++) {
+            for (var i = 0, m; m = this._markers[i]; i++) {
                 if (m == marker) {
                     return true;
                 }
@@ -59,40 +59,44 @@ export class Cluster {
             return false;
         }
 
-        if (!this.center_) {
-            this.center_ = marker.getPosition();
-            this.calculateBounds_();
+        if (!this._center) {
+            this._center = marker.getPosition();
+            this.calculateBounds();
         } else {
-            if (this.averageCenter_) {
-                var l = this.markers_.length + 1;
-                var lat = (this.center_.lat() * (l - 1) + marker.getPosition().lat()) / l;
-                var lng = (this.center_.lng() * (l - 1) + marker.getPosition().lng()) / l;
-                this.center_ = new google.maps.LatLng(lat, lng);
-                this.calculateBounds_();
+            if (this._averageCenter) {
+                var l = this._markers.length + 1;
+                var lat = (this._center.lat() * (l - 1) + marker.getPosition().lat()) / l;
+                var lng = (this._center.lng() * (l - 1) + marker.getPosition().lng()) / l;
+                this._center = new google.maps.LatLng(lat, lng);
+                this.calculateBounds();
             }
         }
 
         marker.isAdded = true;
-        this.markers_.push(marker);
+        this._markers.push(marker);
 
-        var len = this.markers_.length;
-        if (len < this.minClusterSize_ && marker.getMap() != this.map_) {
+        var len = this._markers.length;
+        if (len < this._minClusterSize && marker.getMap() != this._map) {
             // Min cluster size not reached so show the marker.
-            marker.setMap(this.map_);
+            marker.setMap(this._map);
         }
 
-        if (len == this.minClusterSize_) {
+        if (len == this._minClusterSize) {
             // Hide the markers that were showing.
             for (var i = 0; i < len; i++) {
-                this.markers_[i].setMap(null);
+                this._markers[i].setMap(null);
             }
         }
 
-        if (len >= this.minClusterSize_) {
+        if (len >= this._minClusterSize) {
             marker.setMap(null);
         }
 
-        // this.updateIcon(); //GG -> fait plus tard
+        /**
+         * ggrimbert, this is done later in createCluster
+         * avoids calling updateIcon for each marker
+         */
+        // this.updateIcon(); 
         return true;
     };
 
@@ -101,7 +105,7 @@ export class Cluster {
      * @return {MarkerClusterer} The associated marker clusterer.
      */
     getMarkerClusterer() {
-        return this.markerClusterer_;
+        return this._markerClusterer;
     };
 
     /**
@@ -109,7 +113,7 @@ export class Cluster {
      * @return {google.maps.LatLngBounds} the cluster bounds.
      */
     getBounds() {
-        var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
+        var bounds = new google.maps.LatLngBounds(this._center, this._center);
         var markers = this.getMarkers();
         for (var i = 0, marker; marker = markers[i]; i++) {
             bounds.extend(marker.getPosition());
@@ -121,9 +125,9 @@ export class Cluster {
      * Removes the cluster
      */
     remove() {
-        this.clusterIcon_.remove();
-        this.markers_.length = 0;
-        delete this.markers_;
+        this._clusterIcon.remove();
+        this._markers.length = 0;
+        delete this._markers;
     };
 
     /**
@@ -131,7 +135,7 @@ export class Cluster {
      * @return {number} The cluster center.
      */
     getSize() {
-        return this.markers_.length;
+        return this._markers.length;
     };
 
     /**
@@ -139,7 +143,7 @@ export class Cluster {
      * @return {Array.<google.maps.Marker>} The cluster center.
      */
     getMarkers() {
-        return this.markers_;
+        return this._markers;
     };
 
     /**
@@ -147,16 +151,16 @@ export class Cluster {
      * @return {google.maps.LatLng} The cluster center.
      */
     getCenter() {
-        return this.center_;
+        return this._center;
     };
 
     /**
      * Calculated the extended bounds of the cluster with the grid.
      * @private
      */
-    calculateBounds_() {
-        var bounds = new google.maps.LatLngBounds(this.center_, this.center_);
-        this.bounds_ = this.markerClusterer_.getExtendedBounds(bounds);
+    calculateBounds() {
+        var bounds = new google.maps.LatLngBounds(this._center, this._center);
+        this._bounds = this._markerClusterer.getExtendedBounds(bounds);
     };
 
 
@@ -167,7 +171,7 @@ export class Cluster {
      * @return {boolean} True if the marker lies in the bounds.
      */
     isMarkerInClusterBounds(marker) {
-        return this.bounds_.contains(marker.getPosition());
+        return this._bounds.contains(marker.getPosition());
     };
 
     /**
@@ -175,7 +179,7 @@ export class Cluster {
      * @return {google.maps.Map} The map.
      */
     getMap() {
-        return this.map_;
+        return this._map;
     };
 
 
@@ -183,27 +187,27 @@ export class Cluster {
      * Updates the cluster icon
      */
     updateIcon() {
-        var zoom = this.map_.getZoom();
-        var mz = this.markerClusterer_.getMaxZoom();
+        var zoom = this._map.getZoom();
+        var mz = this._markerClusterer.getMaxZoom();
 
         if (mz && zoom > mz) {
             // The zoom is greater than our max zoom so show all the markers in cluster.
-            for (var i = 0, marker; marker = this.markers_[i]; i++) {
-                marker.setMap(this.map_);
+            for (var i = 0, marker; marker = this._markers[i]; i++) {
+                marker.setMap(this._map);
             }
             return;
         }
 
-        if (this.markers_.length < this.minClusterSize_) {
+        if (this._markers.length < this._minClusterSize) {
             // Min cluster size not yet reached.
-            this.clusterIcon_.hide();
+            this._clusterIcon.hide();
             return;
         }
 
-        var numStyles = this.markerClusterer_.getStyles().length;
-        var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
-        this.clusterIcon_.setCenter(this.center_);
-        this.clusterIcon_.setSums(sums);
-        this.clusterIcon_.show();
+        var numStyles = this._markerClusterer.getStyles().length;
+        var sums = this._markerClusterer.getCalculator()(this._markers, numStyles);
+        this._clusterIcon.setCenter(this._center);
+        this._clusterIcon.setSums(sums);
+        this._clusterIcon.show();
     };
 }

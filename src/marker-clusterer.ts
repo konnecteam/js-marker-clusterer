@@ -37,22 +37,22 @@ import { Cluster } from './cluster';
 
 export class MarkerClusterer {
 
-  map_ = null;
-  markers_: Array<google.maps.Marker> = [];
-  clusters_: Array<Cluster> = [];
+  _map = null;
+  _markers: Array<google.maps.Marker> = [];
+  _clusters: Array<Cluster> = [];
   sizes = [];
-  styles_ = [];
-  ready_: boolean = false;
-  gridSize_: number = 60;
-  minClusterSize_ = 0;
-  maxZoom_: number = 0;
-  imagePath_: string = "";
-  imageExtension_: string = "";
-  MARKER_CLUSTER_IMAGE_PATH_: string = '../images/m';
-  MARKER_CLUSTER_IMAGE_EXTENSION_: string = "png";
-  zoomOnClick_: boolean = true;
-  averageCenter_: boolean = false;
-  prevZoom_: number = 0;
+  _styles = [];
+  _ready: boolean = false;
+  _gridSize: number = 60;
+  _minClusterSize = 0;
+  _maxZoom: number = 0;
+  _imagePath: string = "";
+  _imageExtension: string = "";
+  _MARKER_CLUSTER_IMAGE_PATH: string = '../images/m';
+  _MARKER_CLUSTER_IMAGE_EXTENSION: string = "png";
+  _zoomOnClick: boolean = true;
+  _averageCenter: boolean = false;
+  _prevZoom: number = 0;
 
 
   /**
@@ -87,40 +87,40 @@ export class MarkerClusterer {
   constructor(map, opt_markers, opt_options) {
     this.extend(MarkerClusterer, google.maps.OverlayView);
 
-    this.map_ = map;
+    this._map = map;
     this.sizes = [53, 56, 66, 78, 90];
     let options = opt_options || {};
-    this.gridSize_ = options['gridSize'] || 60;
-    this.minClusterSize_ = options['minimumClusterSize'] || 2;
-    this.maxZoom_ = options['maxZoom'] || null;
-    this.styles_ = options['styles'] || [];
-    this.imagePath_ = options['imagePath'] || this.MARKER_CLUSTER_IMAGE_PATH_;
-    this.imageExtension_ = options['imageExtension'] || this.MARKER_CLUSTER_IMAGE_EXTENSION_;
+    this._gridSize = options['gridSize'] || 60;
+    this._minClusterSize = options['minimumClusterSize'] || 2;
+    this._maxZoom = options['maxZoom'] || null;
+    this._styles = options['styles'] || [];
+    this._imagePath = options['imagePath'] || this._MARKER_CLUSTER_IMAGE_PATH;
+    this._imageExtension = options['imageExtension'] || this._MARKER_CLUSTER_IMAGE_EXTENSION;
 
     if (options['zoomOnClick'] != undefined) {
-      this.zoomOnClick_ = options['zoomOnClick'];
+      this._zoomOnClick = options['zoomOnClick'];
     }
 
     if (options['averageCenter'] != undefined) {
-      this.averageCenter_ = options['averageCenter'];
+      this._averageCenter = options['averageCenter'];
     }
 
-    this.setupStyles_();
+    this.setupStyles();
     this.setMap(map);
-    this.prevZoom_ = this.map_.getZoom();
+    this._prevZoom = this._map.getZoom();
 
     // Add the map event listeners
-    //@Changed ggrimbert -> on n'utilise pas les listeners, c'est le composant qui va appeler le constructeur, qui va refresh
-    /*google.maps.event.addListener(this.map_, 'zoom_changed', () => {
-      var zoom = this.map_.getZoom();
+    //@Changed ggrimbert -> events are not used here, the map calling this already deals with it
+    /*google.maps.event.addListener(this._map, 'zoom_changed', () => {
+      var zoom = this._map.getZoom();
 
-      if (this.prevZoom_ != zoom) {
-        this.prevZoom_ = zoom;
+      if (this._prevZoom != zoom) {
+        this._prevZoom = zoom;
         this.resetViewport();
       }
     });
 
-    google.maps.event.addListener(this.map_, 'idle', () => {
+    google.maps.event.addListener(this._map, 'idle', () => {
       this.redraw();
     });*/
 
@@ -144,7 +144,7 @@ export class MarkerClusterer {
    * @ignore
    */
   onAdd() {
-    this.setReady_(true);
+    this.setReady(true);
   };
 
   /**
@@ -157,14 +157,14 @@ export class MarkerClusterer {
    * Sets up the styles object.
    * @private
    */
-  setupStyles_() {
-    if (this.styles_.length) {
+  setupStyles() {
+    if (this._styles.length) {
       return;
     }
 
     for (var i = 0, size; size = this.sizes[i]; i++) {
-      this.styles_.push({
-        url: this.imagePath_ + (i + 1) + '.' + this.imageExtension_,
+      this._styles.push({
+        url: this._imagePath + (i + 1) + '.' + this._imageExtension,
         height: size,
         width: size
       });
@@ -181,7 +181,7 @@ export class MarkerClusterer {
       bounds.extend(marker.getPosition());
     }
 
-    this.map_.fitBounds(bounds);
+    this._map.fitBounds(bounds);
   };
 
   /**
@@ -189,7 +189,7 @@ export class MarkerClusterer {
    *  @param {Object} styles The style to set.
    */
   setStyles(styles) {
-    this.styles_ = styles;
+    this._styles = styles;
   };
 
   /**
@@ -197,23 +197,23 @@ export class MarkerClusterer {
    *  @return {Object} The styles object.
    */
   getStyles() {
-    return this.styles_;
+    return this._styles;
   };
 
   /**
    * Whether zoom on click is set.
-   * @return {boolean} True if zoomOnClick_ is set.
+   * @return {boolean} True if _zoomOnClick is set.
    */
   isZoomOnClick() {
-    return this.zoomOnClick_;
+    return this._zoomOnClick;
   };
 
   /**
    * Whether average center is set.
-   * @return {boolean} True if averageCenter_ is set.
+   * @return {boolean} True if _averageCenter is set.
    */
   isAverageCenter() {
-    return this.averageCenter_;
+    return this._averageCenter;
   };
 
   /**
@@ -221,7 +221,7 @@ export class MarkerClusterer {
    *  @return {Array.<google.maps.Marker>} The markers.
    */
   getMarkers() {
-    return this.markers_;
+    return this._markers;
   };
 
   /**
@@ -229,7 +229,7 @@ export class MarkerClusterer {
    *  @return {Number} The number of markers.
    */
   getTotalMarkers() {
-    return this.markers_.length;
+    return this._markers.length;
   };
 
   /**
@@ -237,7 +237,7 @@ export class MarkerClusterer {
    *  @param {number} maxZoom The max zoom level.
    */
   setMaxZoom(maxZoom) {
-    this.maxZoom_ = maxZoom;
+    this._maxZoom = maxZoom;
   };
 
   /**
@@ -245,7 +245,7 @@ export class MarkerClusterer {
    *  @return {number} The max zoom level.
    */
   getMaxZoom() {
-    return this.maxZoom_;
+    return this._maxZoom;
   };
 
   /**
@@ -255,7 +255,7 @@ export class MarkerClusterer {
    *  @return {Object} A object properties: 'text' (string) and 'index' (number).
    *  @private
    */
-  calculator_(markers, numStyles) {
+  _calculator(markers, numStyles) {
     var index = 0;
     var count = markers.length;
     var dv = count;
@@ -278,7 +278,7 @@ export class MarkerClusterer {
    *     'text' (string) and 'index' (number).
    */
   setCalculator(calculator) {
-    this.calculator_ = calculator;
+    this._calculator = calculator;
   };
 
   /**
@@ -286,7 +286,7 @@ export class MarkerClusterer {
    * @return {function(Array, number)} the calculator function.
    */
   getCalculator() {
-    return this.calculator_;
+    return this._calculator;
   };
 
   /**
@@ -296,7 +296,7 @@ export class MarkerClusterer {
    */
   addMarkers(markers, opt_nodraw) {
     for (var i = 0, marker; marker = markers[i]; i++) {
-      this.pushMarkerTo_(marker);
+      this._pushMarkerTo(marker);
     }
     if (!opt_nodraw) {
       this.redraw();
@@ -308,7 +308,7 @@ export class MarkerClusterer {
    * @param {google.maps.Marker} marker The marker to add.
    * @private
    */
-  pushMarkerTo_(marker) {
+  _pushMarkerTo(marker) {
     marker.isAdded = false;
     if (marker['draggable']) {
       // If the marker is draggable add a listener so we update the clusters on
@@ -318,7 +318,7 @@ export class MarkerClusterer {
         this.repaint();
       });
     }
-    this.markers_.push(marker);
+    this._markers.push(marker);
   };
 
   /**
@@ -327,7 +327,7 @@ export class MarkerClusterer {
    * @param {boolean=} opt_nodraw Whether to redraw the clusters.
    */
   addMarker(marker, opt_nodraw) {
-    this.pushMarkerTo_(marker);
+    this._pushMarkerTo(marker);
     if (!opt_nodraw) {
       this.redraw();
     }
@@ -339,26 +339,34 @@ export class MarkerClusterer {
    * @return {boolean} Whether the marker was removed or not
    * @private
    */
-  removeMarker_(marker) {
-    var index = -1;
-    if (this.markers_.indexOf) {
-      index = this.markers_.indexOf(marker);
-    } else {
-      for (var i = 0, m; m = this.markers_[i]; i++) {
-        if (m == marker) {
-          index = i;
-          break;
+  _removeMarker(marker, idx : number = -1) {
+    var index = idx;
+
+    //When coming from removeMarkers, we already have the index
+    if (index < -1) {
+      if (this._markers.indexOf) {
+      index = this._markers.indexOf(marker);
+      } else {
+        for (var i = 0, m; m = this._markers[i]; i++) {
+          if (m == marker) {
+            index = i;
+            break;
+          }
         }
       }
     }
-
+    
     if (index == -1) {
       // Marker is not in our list of markers.
       return false;
     }
 
     marker.setMap(null);
-    this.markers_.splice(index, 1);
+    //ggrimbert, Bug when called from removeMarkers, the splice is called while a for loop is iterating over the array
+    //so only half of the complete markers array is processed
+    if (idx === -1) {
+      this._markers.splice(index, 1);
+    }
     return true;
   };
 
@@ -369,7 +377,7 @@ export class MarkerClusterer {
    * @return {boolean} True if the marker was removed.
    */
   removeMarker(marker, opt_nodraw) {
-    var removed = this.removeMarker_(marker);
+    var removed = this._removeMarker(marker);
 
     if (!opt_nodraw && removed) {
       this.resetViewport();
@@ -389,9 +397,11 @@ export class MarkerClusterer {
     var removed = false;
 
     for (var i = 0, marker; marker = markers[i]; i++) {
-      var r = this.removeMarker_(marker);
+      var r = this._removeMarker(marker, i);
       removed = removed || r;
     }
+
+    this._markers = [];
 
     if (!opt_nodraw && removed) {
       this.resetViewport();
@@ -405,10 +415,10 @@ export class MarkerClusterer {
    * @param {boolean} ready The state.
    * @private
    */
-  setReady_(ready) {
-    if (!this.ready_) {
-      this.ready_ = ready;
-      this.createClusters_();
+  setReady(ready) {
+    if (!this._ready) {
+      this._ready = ready;
+      this.createClusters();
     }
   };
 
@@ -417,7 +427,7 @@ export class MarkerClusterer {
    * @return {number} The number of clusters.
    */
   getTotalClusters() {
-    return this.clusters_.length;
+    return this._clusters.length;
   };
 
   /**
@@ -425,7 +435,7 @@ export class MarkerClusterer {
    * @return {google.maps.Map} The map.
    */
   getMap() {
-    return this.map_;
+    return this._map;
   };
 
   /**
@@ -433,7 +443,7 @@ export class MarkerClusterer {
    * @param {google.maps.Map} map The map.
    */
   setMap(map) {
-    this.map_ = map;
+    this._map = map;
   };
 
   /**
@@ -441,7 +451,7 @@ export class MarkerClusterer {
    * @return {number} The grid size.
    */
   getGridSize() {
-    return this.gridSize_;
+    return this._gridSize;
   };
 
   /**
@@ -449,7 +459,7 @@ export class MarkerClusterer {
    * @param {number} size The grid size.
    */
   setGridSize(size) {
-    this.gridSize_ = size;
+    this._gridSize = size;
   };
 
   /**
@@ -457,7 +467,7 @@ export class MarkerClusterer {
    * @return {number} The grid size.
    */
   getMinClusterSize() {
-    return this.minClusterSize_;
+    return this._minClusterSize;
   };
 
   /**
@@ -465,7 +475,7 @@ export class MarkerClusterer {
    * @param {number} size The grid size.
    */
   setMinClusterSize(size) {
-    this.minClusterSize_ = size;
+    this._minClusterSize = size;
   };
 
   /**
@@ -484,12 +494,12 @@ export class MarkerClusterer {
 
     // Convert the points to pixels and the extend out by the grid size.
     var trPix = projection.fromLatLngToDivPixel(tr);
-    trPix.x += this.gridSize_;
-    trPix.y -= this.gridSize_;
+    trPix.x += this._gridSize;
+    trPix.y -= this._gridSize;
 
     var blPix = projection.fromLatLngToDivPixel(bl);
-    blPix.x -= this.gridSize_;
-    blPix.y += this.gridSize_;
+    blPix.x -= this._gridSize;
+    blPix.y += this._gridSize;
 
     // Convert the pixel points back to LatLng
     var ne = projection.fromDivPixelToLatLng(trPix);
@@ -509,7 +519,7 @@ export class MarkerClusterer {
    * @return {boolean} True if the marker is in the bounds.
    * @private
    */
-  isMarkerInBounds_(marker, bounds) {
+  _isMarkerInBounds(marker, bounds) {
     return bounds.contains(marker.getPosition());
   };
 
@@ -520,7 +530,7 @@ export class MarkerClusterer {
     this.resetViewport(true);
 
     // Set the markers a empty array.
-    this.markers_ = [];
+    this._markers = [];
   };
 
   /**
@@ -529,24 +539,24 @@ export class MarkerClusterer {
    */
   resetViewport(opt_hide: boolean = false) {
     // Remove all the clusters
-    for (var i = 0, cluster; cluster = this.clusters_[i]; i++) {
+    for (var i = 0, cluster; cluster = this._clusters[i]; i++) {
       cluster.remove();
     }
 
     // Reset the markers to not be added and to be invisible.
-    for (var i = 0, marker; marker = this.markers_[i]; i++) {
+    for (var i = 0, marker; marker = this._markers[i]; i++) {
       marker.isAdded = false;
       if (opt_hide) {
         marker.setMap(null);
       }
     }
 
-    this.clusters_ = [];
+    this._clusters = [];
   };
 
   repaint() {
-    var oldClusters = this.clusters_.slice();
-    this.clusters_.length = 0;
+    var oldClusters = this._clusters.slice();
+    this._clusters.length = 0;
     this.resetViewport();
     this.redraw();
 
@@ -563,7 +573,7 @@ export class MarkerClusterer {
    * Redraws the clusters.
    */
   redraw() {
-    this.createClusters_();
+    this.createClusters();
   };
 
   /**
@@ -574,7 +584,7 @@ export class MarkerClusterer {
    * @return {number} The distance between the two points in km.
    * @private
   */
-  distanceBetweenPoints_(p1, p2) {
+  _distanceBetweenPoints(p1, p2) {
     if (!p1 || !p2) {
       return 0;
     }
@@ -595,14 +605,14 @@ export class MarkerClusterer {
    * @param {google.maps.Marker} marker The marker to add.
    * @private
    */
-  addToClosestCluster_(marker) {
+  _addToClosestCluster(marker) {
     var distance = 40000; // Some large number
     var clusterToAddTo = null;
     var pos = marker.getPosition();
-    for (var i = 0, cluster; cluster = this.clusters_[i]; i++) {
+    for (var i = 0, cluster; cluster = this._clusters[i]; i++) {
       var center = cluster.getCenter();
       if (center) {
-        var d = this.distanceBetweenPoints_(center, marker.getPosition());
+        var d = this._distanceBetweenPoints(center, marker.getPosition());
         if (d < distance) {
           distance = d;
           clusterToAddTo = cluster;
@@ -615,7 +625,7 @@ export class MarkerClusterer {
     } else {
       var cluster : any = new Cluster(this);
       cluster.addMarker(marker);
-      this.clusters_.push(cluster);
+      this._clusters.push(cluster);
     }
   };
 
@@ -623,25 +633,25 @@ export class MarkerClusterer {
    * Creates the clusters.
    * @private
    */
-  createClusters_() {
-    if (!this.ready_) {
+  createClusters() {
+    if (!this._ready) {
       return;
     }
 
     // Get our current map view bounds.
     // Create a new bounds object so we don't affect the map.
-    var mapBounds = new google.maps.LatLngBounds(this.map_.getBounds().getSouthWest(),
-      this.map_.getBounds().getNorthEast());
+    var mapBounds = new google.maps.LatLngBounds(this._map.getBounds().getSouthWest(),
+      this._map.getBounds().getNorthEast());
     var bounds = this.getExtendedBounds(mapBounds);
 
-    for (var i = 0, marker; marker = this.markers_[i]; i++) {
-      if (!marker.isAdded && this.isMarkerInBounds_(marker, bounds)) {
-        this.addToClosestCluster_(marker);
+    for (var i = 0, marker; marker = this._markers[i]; i++) {
+      if (!marker.isAdded && this._isMarkerInBounds(marker, bounds)) {
+        this._addToClosestCluster(marker);
       }
     }
 
-    for (let i = 0; i < this.clusters_.length; i++) {
-      this.clusters_[i].updateIcon();
+    for (let i = 0; i < this._clusters.length; i++) {
+      this._clusters[i].updateIcon();
     }
   };
 }

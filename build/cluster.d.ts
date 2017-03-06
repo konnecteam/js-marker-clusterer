@@ -3,15 +3,15 @@
  * A cluster that contains markers.
  */
 export declare class Cluster {
-    markerClusterer_: any;
-    map_: any;
-    gridSize_: any;
-    minClusterSize_: any;
-    averageCenter_: any;
-    center_: any;
-    markers_: any[];
-    bounds_: any;
-    clusterIcon_: any;
+    _markerClusterer: any;
+    _map: any;
+    _gridSize: any;
+    _minClusterSize: any;
+    _averageCenter: any;
+    _center: any;
+    _markers: any[];
+    _bounds: any;
+    _clusterIcon: any;
     /**
      *  @param {MarkerClusterer} markerClusterer The markerclusterer that this
      *     cluster is associated with.
@@ -62,7 +62,7 @@ export declare class Cluster {
      * Calculated the extended bounds of the cluster with the grid.
      * @private
      */
-    calculateBounds_(): void;
+    calculateBounds(): void;
     /**
      * Determines if a marker lies in the clusters bounds.
      *

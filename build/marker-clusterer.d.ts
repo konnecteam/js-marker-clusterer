@@ -29,22 +29,22 @@ import { Cluster } from './cluster';
  * limitations under the License.
  */
 export declare class MarkerClusterer {
-    map_: any;
-    markers_: Array<google.maps.Marker>;
-    clusters_: Array<Cluster>;
+    _map: any;
+    _markers: Array<google.maps.Marker>;
+    _clusters: Array<Cluster>;
     sizes: any[];
-    styles_: any[];
-    ready_: boolean;
-    gridSize_: number;
-    minClusterSize_: number;
-    maxZoom_: number;
-    imagePath_: string;
-    imageExtension_: string;
-    MARKER_CLUSTER_IMAGE_PATH_: string;
-    MARKER_CLUSTER_IMAGE_EXTENSION_: string;
-    zoomOnClick_: boolean;
-    averageCenter_: boolean;
-    prevZoom_: number;
+    _styles: any[];
+    _ready: boolean;
+    _gridSize: number;
+    _minClusterSize: number;
+    _maxZoom: number;
+    _imagePath: string;
+    _imageExtension: string;
+    _MARKER_CLUSTER_IMAGE_PATH: string;
+    _MARKER_CLUSTER_IMAGE_EXTENSION: string;
+    _zoomOnClick: boolean;
+    _averageCenter: boolean;
+    _prevZoom: number;
     /**
    * A Marker Clusterer that clusters markers.
    *
@@ -90,7 +90,7 @@ export declare class MarkerClusterer {
      * Sets up the styles object.
      * @private
      */
-    setupStyles_(): void;
+    setupStyles(): void;
     /**
      *  Fit the map to the bounds of the markers in the clusterer.
      */
@@ -107,12 +107,12 @@ export declare class MarkerClusterer {
     getStyles(): any[];
     /**
      * Whether zoom on click is set.
-     * @return {boolean} True if zoomOnClick_ is set.
+     * @return {boolean} True if _zoomOnClick is set.
      */
     isZoomOnClick(): boolean;
     /**
      * Whether average center is set.
-     * @return {boolean} True if averageCenter_ is set.
+     * @return {boolean} True if _averageCenter is set.
      */
     isAverageCenter(): boolean;
     /**
@@ -142,7 +142,7 @@ export declare class MarkerClusterer {
      *  @return {Object} A object properties: 'text' (string) and 'index' (number).
      *  @private
      */
-    calculator_(markers: any, numStyles: any): {
+    _calculator(markers: any, numStyles: any): {
         text: any;
         index: number;
     };
@@ -172,7 +172,7 @@ export declare class MarkerClusterer {
      * @param {google.maps.Marker} marker The marker to add.
      * @private
      */
-    pushMarkerTo_(marker: any): void;
+    _pushMarkerTo(marker: any): void;
     /**
      * Adds a marker to the clusterer and redraws if needed.
      * @param {google.maps.Marker} marker The marker to add.
@@ -185,7 +185,7 @@ export declare class MarkerClusterer {
      * @return {boolean} Whether the marker was removed or not
      * @private
      */
-    removeMarker_(marker: any): boolean;
+    _removeMarker(marker: any, idx?: number): boolean;
     /**
      * Remove a marker from the cluster.
      * @param {google.maps.Marker} marker The marker to remove.
@@ -204,7 +204,7 @@ export declare class MarkerClusterer {
      * @param {boolean} ready The state.
      * @private
      */
-    setReady_(ready: any): void;
+    setReady(ready: any): void;
     /**
      * Returns the number of clusters in the clusterer.
      * @return {number} The number of clusters.
@@ -253,7 +253,7 @@ export declare class MarkerClusterer {
      * @return {boolean} True if the marker is in the bounds.
      * @private
      */
-    isMarkerInBounds_(marker: any, bounds: any): any;
+    _isMarkerInBounds(marker: any, bounds: any): any;
     /**
      * Clears all clusters and markers from the clusterer.
      */
@@ -276,16 +276,16 @@ export declare class MarkerClusterer {
      * @return {number} The distance between the two points in km.
      * @private
     */
-    distanceBetweenPoints_(p1: any, p2: any): number;
+    _distanceBetweenPoints(p1: any, p2: any): number;
     /**
      * Add a marker to a cluster, or creates a new cluster.
      * @param {google.maps.Marker} marker The marker to add.
      * @private
      */
-    addToClosestCluster_(marker: any): void;
+    _addToClosestCluster(marker: any): void;
     /**
      * Creates the clusters.
      * @private
      */
-    createClusters_(): void;
+    createClusters(): void;
 }
