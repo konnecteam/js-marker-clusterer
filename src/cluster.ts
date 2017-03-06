@@ -1,4 +1,6 @@
 import { ClusterIcon } from './cluster-icon';
+import { google } from "@types/google-maps";
+
 /**
  * A cluster that contains markers.
  */

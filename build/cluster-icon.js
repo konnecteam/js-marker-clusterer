@@ -1,22 +1,22 @@
-/**
- * A cluster icon
- *
- * @param {Cluster} cluster The cluster to be associated with.
- * @param {Object} styles An object that has style properties:
- *     'url': (string) The image url.
- *     'height': (number) The image height.
- *     'width': (number) The image width.
- *     'anchor': (Array) The anchor position of the label text.
- *     'textColor': (string) The text color.
- *     'textSize': (number) The text size.
- *     'backgroundPosition: (string) The background postition x, y.
- * @param {number=} opt_padding Optional padding to apply to the cluster icon.
- * @constructor
- * @extends google.maps.OverlayView
- * @ignore
- */
 "use strict";
 class ClusterIcon {
+    /**
+     * A cluster icon
+     *
+     * @param {Cluster} cluster The cluster to be associated with.
+     * @param {Object} styles An object that has style properties:
+     *     'url': (string) The image url.
+     *     'height': (number) The image height.
+     *     'width': (number) The image width.
+     *     'anchor': (Array) The anchor position of the label text.
+     *     'textColor': (string) The text color.
+     *     'textSize': (number) The text size.
+     *     'backgroundPosition: (string) The background postition x, y.
+     * @param {number=} opt_padding Optional padding to apply to the cluster icon.
+     * @constructor
+     * @extends google.maps.OverlayView
+     * @ignore
+     */
     constructor(cluster, styles, opt_padding) {
         this._styles = null;
         this._padding = 0;
@@ -96,7 +96,7 @@ class ClusterIcon {
      * @return {google.maps.Point} The position in pixels.
      * @private
      */
-    _getPosFromLatLng(latlng) {
+    getPosFromLatLng_(latlng) {
         var pos = this.getProjection().fromLatLngToDivPixel(latlng);
         if (typeof this._iconAnchor === 'object' && this._iconAnchor.length === 2) {
             pos.x -= this._iconAnchor[0];
@@ -115,7 +115,7 @@ class ClusterIcon {
      */
     draw() {
         if (this._visible) {
-            var pos = this._getPosFromLatLng(this._center);
+            var pos = this.getPosFromLatLng_(this._center);
             this._div.style.top = pos.y + 'px';
             this._div.style.left = pos.x + 'px';
         }
@@ -136,7 +136,7 @@ class ClusterIcon {
      */
     show() {
         if (this._div) {
-            var pos = this._getPosFromLatLng(this._center);
+            var pos = this.getPosFromLatLng_(this._center);
             this._div.style.cssText = this.createCss(pos);
             this._div.style.display = '';
         }

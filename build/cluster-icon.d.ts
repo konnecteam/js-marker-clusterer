@@ -1,20 +1,3 @@
-/**
- * A cluster icon
- *
- * @param {Cluster} cluster The cluster to be associated with.
- * @param {Object} styles An object that has style properties:
- *     'url': (string) The image url.
- *     'height': (number) The image height.
- *     'width': (number) The image width.
- *     'anchor': (Array) The anchor position of the label text.
- *     'textColor': (string) The text color.
- *     'textSize': (number) The text size.
- *     'backgroundPosition: (string) The background postition x, y.
- * @param {number=} opt_padding Optional padding to apply to the cluster icon.
- * @constructor
- * @extends google.maps.OverlayView
- * @ignore
- */
 export declare class ClusterIcon {
     _styles: any;
     _padding: number;
@@ -34,6 +17,23 @@ export declare class ClusterIcon {
     _anchor: any;
     _textSize: any;
     _backgroundPosition: any;
+    /**
+     * A cluster icon
+     *
+     * @param {Cluster} cluster The cluster to be associated with.
+     * @param {Object} styles An object that has style properties:
+     *     'url': (string) The image url.
+     *     'height': (number) The image height.
+     *     'width': (number) The image width.
+     *     'anchor': (Array) The anchor position of the label text.
+     *     'textColor': (string) The text color.
+     *     'textSize': (number) The text size.
+     *     'backgroundPosition: (string) The background postition x, y.
+     * @param {number=} opt_padding Optional padding to apply to the cluster icon.
+     * @constructor
+     * @extends google.maps.OverlayView
+     * @ignore
+     */
     constructor(cluster: any, styles: any, opt_padding: any);
     /**
    * Triggers the clusterclick event and zoom's if the option is set.
@@ -51,7 +51,7 @@ export declare class ClusterIcon {
      * @return {google.maps.Point} The position in pixels.
      * @private
      */
-    _getPosFromLatLng(latlng: any): any;
+    getPosFromLatLng_(latlng: any): any;
     /**
      * Draw the icon.
      * @ignore
