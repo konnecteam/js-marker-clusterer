@@ -1,4 +1,5 @@
 import { google } from "@types/google-maps";
+import { MarkerClusterer } from './marker-clusterer';
 
 
 export class ClusterIcon {
@@ -67,6 +68,12 @@ export class ClusterIcon {
         if (markerClusterer.isZoomOnClick()) {
             // Zoom into the cluster.
             this._map.fitBounds(this._cluster.getBounds());
+
+            //Specific actions to do when the max zoom is reached AND there is still a cluster
+            if (!this.maxZoomReached() && markerClusterer.maxZoomReachedCb !== null) {
+                //Max zoom reached, we call the callback to do some specfic actions
+                markerClusterer.maxZoomReachedCb(this._cluster);
+            }
         }
     };
 
@@ -214,6 +221,17 @@ export class ClusterIcon {
     setCenter(center) {
         this._center = center;
     };
+
+    /**
+     * Can the map be zoomed more ?
+     */
+    maxZoomReached() {
+        if (this._cluster.getMarkerClusterer().getMaxZoom() === this._map.getZoom()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     /**
      * Create the css text based on the position of the icon.

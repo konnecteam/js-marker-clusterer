@@ -45,6 +45,7 @@ export declare class MarkerClusterer {
     _zoomOnClick: boolean;
     _averageCenter: boolean;
     _prevZoom: number;
+    maxZoomReachedCb: Function;
     /**
    * A Marker Clusterer that clusters markers.
    *

@@ -71,7 +71,7 @@ class MarkerClusterer {
         this._ready = false;
         this._gridSize = 60;
         this._minClusterSize = 0;
-        this._maxZoom = 0;
+        this._maxZoom = 22;
         this._imagePath = "";
         this._imageExtension = "";
         this._MARKER_CLUSTER_IMAGE_PATH = '../images/m';
@@ -79,16 +79,18 @@ class MarkerClusterer {
         this._zoomOnClick = true;
         this._averageCenter = false;
         this._prevZoom = 0;
+        this.maxZoomReachedCb = (marker) => { };
         this.extend(MarkerClusterer, google.maps.OverlayView);
         this._map = map;
         this.sizes = [53, 56, 66, 78, 90];
         let options = opt_options || {};
         this._gridSize = options['gridSize'] || 60;
         this._minClusterSize = options['minimumClusterSize'] || 2;
-        this._maxZoom = options['maxZoom'] || null;
+        this._maxZoom = options['maxZoom'] || 22;
         this._styles = options['styles'] || [];
         this._imagePath = options['imagePath'] || this._MARKER_CLUSTER_IMAGE_PATH;
         this._imageExtension = options['imageExtension'] || this._MARKER_CLUSTER_IMAGE_EXTENSION;
+        this.maxZoomReachedCb = options['maxZoomReachedCb'];
         if (options['zoomOnClick'] != undefined) {
             this._zoomOnClick = options['zoomOnClick'];
         }

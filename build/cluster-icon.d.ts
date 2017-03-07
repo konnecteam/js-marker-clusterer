@@ -91,6 +91,10 @@ export declare class ClusterIcon {
      */
     setCenter(center: any): void;
     /**
+     * Can the map be zoomed more ?
+     */
+    maxZoomReached(): boolean;
+    /**
      * Create the css text based on the position of the icon.
      * @param {google.maps.Point} pos The position.
      * @return {string} The css style text.

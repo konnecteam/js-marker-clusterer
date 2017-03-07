@@ -46,7 +46,7 @@ export class MarkerClusterer {
   _ready: boolean = false;
   _gridSize: number = 60;
   _minClusterSize = 0;
-  _maxZoom: number = 0;
+  _maxZoom: number = 22;
   _imagePath: string = "";
   _imageExtension: string = "";
   _MARKER_CLUSTER_IMAGE_PATH: string = '../images/m';
@@ -54,6 +54,7 @@ export class MarkerClusterer {
   _zoomOnClick: boolean = true;
   _averageCenter: boolean = false;
   _prevZoom: number = 0;
+  maxZoomReachedCb : Function = (marker : any) => {};
 
 
   /**
@@ -93,10 +94,11 @@ export class MarkerClusterer {
     let options = opt_options || {};
     this._gridSize = options['gridSize'] || 60;
     this._minClusterSize = options['minimumClusterSize'] || 2;
-    this._maxZoom = options['maxZoom'] || null;
+    this._maxZoom = options['maxZoom'] || 22;
     this._styles = options['styles'] || [];
     this._imagePath = options['imagePath'] || this._MARKER_CLUSTER_IMAGE_PATH;
     this._imageExtension = options['imageExtension'] || this._MARKER_CLUSTER_IMAGE_EXTENSION;
+    this.maxZoomReachedCb = options['maxZoomReachedCb'] as Function | null;
 
     if (options['zoomOnClick'] != undefined) {
       this._zoomOnClick = options['zoomOnClick'];
