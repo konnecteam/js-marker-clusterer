@@ -13,8 +13,9 @@ Download or clone `markerclusterer.js` and images `m1.png` to `m5.png`, save ima
 
 To use your own custom cluster images just name your images `m[1-5].png` or set the `imagePath` option to the location and name of your images like this: `imagePath: 'customImages/cat'` for images `cat1.png` to `cat5.png`.
 
-    ...
-(require as any)(['konnect/viewmodels/components/konnect/map/js-marker-clusterer/marker-clusterer'], requires => {
+ ```javascript   
+(require as any)(['konnect/viewmodels/components/konnect/map/js-marker-clusterer/marker-clusterer'], 
+    requires => {
       this.MarkerClusterer = requires.MarkerClusterer;
 
       [...]
@@ -27,7 +28,7 @@ To use your own custom cluster images just name your images `m[1-5].png` or set 
     //Create the MarkerClustere
     new this.MarkerClusterer(this.map, markers, clustererOptions);
 });
-    ...
+```
     
 
 ## Live Demos
