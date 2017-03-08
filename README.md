@@ -9,7 +9,7 @@ Typescript version, with some additions / improvements.
 
 ## Usage
 
-Download or clone `markerclusterer.js` and images `m1.png` to `m5.png`, save images in `images` folder.
+Download or clone `marker-clusterer.ts / cluster.ts / cluster-icon.ts` and images `m1.png` to `m5.png`, save images in `images` folder.
 
 To use your own custom cluster images just name your images `m[1-5].png` or set the `imagePath` option to the location and name of your images like this: `imagePath: 'customImages/cat'` for images `cat1.png` to `cat5.png`.
 
